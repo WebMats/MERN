@@ -4,3 +4,9 @@ export const updateObject = (oldObject, incomingObject) => {
 		...incomingObject
 	}
 };
+
+export const propTypesCheck = (component, prop, type) => {
+	return component.propTypes = {
+		prop: type
+	}
+}
