@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
 	Collapse,
 	Navbar,
@@ -12,23 +12,13 @@ import {
 
 import Aux from '../../hoc/Aux/Aux';
 
-class AppNavbar extends Component {
-	state = {
-		isOpen: false
-	}
-toggle = () => {
-	this.setState({isOpen: !this.state.isOpen})
-}
-
-	render() {
-
-		return (
+const appNavbar = (props) => (
 		<Aux>
 			<Navbar color="dark" dark expand="sm" className="mb-5">
 				<Container>
 					<NavbarBrand href="/">Shopping List</NavbarBrand>
-					<NavbarToggler onClick={this.toggle} />
-					<Collapse isOpen={this.state.isOpen} navbar>
+					<NavbarToggler onClick={props.toggle} />
+					<Collapse isOpen={props.isOpen} navbar>
 						<Nav className="ml-auto" navbar>
 							<NavItem>
 								<NavLink href="https://github.com/WebMats">GitHub</NavLink>
@@ -39,7 +29,4 @@ toggle = () => {
 			</Navbar>
 		</Aux>
 		);
-	}
-}
-
-export default AppNavbar ;
+export default appNavbar ;

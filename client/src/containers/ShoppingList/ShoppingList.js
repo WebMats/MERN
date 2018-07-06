@@ -6,7 +6,6 @@ import {Container, ListGroup, ListGroupItem, Button} from 'reactstrap';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import * as actions from '../../store/actions';
 import ItemModal from '../../components/ItemModal/ItemModal';
-import uuid from 'uuid';
 
 
 class ShoppingList extends Component {
@@ -15,10 +14,11 @@ class ShoppingList extends Component {
 		name: ''
 	}
 	componentDidMount() {
-		this.props.onGetItems()
+		this.props.onInitItems()
 	}
 	toggle = () => {
 		this.setState({modal: !this.state.modal})
+		// this.state.modal === true ? document.querySelector('#item').focus() : null;
 	}
 	onChangeHandler = (e) => {
 		this.setState({[e.target.name]: e.target.value})
@@ -26,29 +26,31 @@ class ShoppingList extends Component {
 	onSubmitHandler = (e) => {
 		e.preventDefault();
 		const newItem = {
-			id: uuid(),
 			name: this.state.name
 		}
-		this.props.onAddItem(newItem);
+		this.props.onPostItem(newItem);
 		this.toggle();
 	}
 
 
 	render() {
-		const { items } = this.props.item
-		const list = items.map(({id, name}) => (
-			<CSSTransition key={id} timeout={500} classNames="fade">
-				<ListGroupItem>
-				<Button
-					className="remove-btn"
-					color="danger"
-					size="sm"
-					onClick={() => this.props.onDeleteItem(id)}
-				>&times;</Button>
-				{name}
-				</ListGroupItem>
-			</CSSTransition>
-			))
+		const { items } = this.props.item;
+		let list = [];
+		if (items) {
+				list = items.map(({_id, name}) => (
+				<CSSTransition key={_id} timeout={500} classNames="fade">
+					<ListGroupItem>
+					<Button
+						className="remove-btn"
+						color="danger"
+						size="sm"
+						onClick={() => this.props.onDeleteItem(_id)}
+					>&times;</Button>
+					{name}
+					</ListGroupItem>
+				</CSSTransition>
+				))
+		}
 
 		return (
 			<Container>
@@ -69,7 +71,7 @@ class ShoppingList extends Component {
 	}
 }
 // prop type checker section start
-propTypesCheck(ShoppingList, actions.getItems, PropTypes.func)
+propTypesCheck(ShoppingList, actions.initItems, PropTypes.func)
 // prop type checker section end
 
 
@@ -81,9 +83,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onGetItems: () => dispatch(actions.getItems()),
-		onDeleteItem: (id) => dispatch(actions.deleteItem(id)),
-		onAddItem: (newItem) => dispatch(actions.addItem(newItem))
+		onInitItems: () => dispatch(actions.initItems()),
+		onDeleteItem: (id) => dispatch(actions.deleteItemFromDB(id)),
+		onPostItem: (newItem) => dispatch(actions.postItem(newItem))
 	}
 }
 
